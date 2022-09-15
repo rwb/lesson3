@@ -1,6 +1,10 @@
-Lesson 3 - Thursday 9/15/22
+## Lesson 3 - Thursday 9/15/22
 
-### C. Consistency
+### A. Ambiguity in Assignment Given Last Week 
+
+
+
+### B. Consistency
 
 We now consider a situation where a small sample estimator is biased but the bias diminishes as the sample size grows larger. Based on the NCVS, we would expect that rural households have a lower victimization risk. So, let's suppose we have a (1M) population of urban and rural households and a disparity in victimization risk that approximates what we see in the NCVS. Here is the R code:
 
