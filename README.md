@@ -293,6 +293,7 @@ Number of Fisher Scoring iterations: 4
 
 ### C. Introduction to Maximum Likelihood
 
+* Distinction between p(model|data) and p(data|model)
 * Enter some data.
 
 ```R
