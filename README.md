@@ -2,7 +2,8 @@
 
 ### A. Ambiguity in Assignment Given Last Week 
 
-
+* Before you can calculate a confidence interval, it is important to calculate the correct standard error.
+* Be sure to review the correct formula for the standard error for the problem you are working on.
 
 ### B. Consistency
 
@@ -26,52 +27,10 @@ popoddsratio <- exp(coef(pop.lr.model)[2])
 popoddsratio
 
 # now, let's sample from the population [nsamples] times
+# using a relatively small sample of size N = 50
+# we will call this the small sample size
 
-nsamples <- 1000
-sampsize <- 3000
-
-urban.coef.large <- vector()
-
-for(i in 1:nsamples)
-  {
-   sdf <- pop.df[sample(nrow(pop.df),size=sampsize,replace=T), ]
-   large.logit <- glm(y~1+urban,data=sdf,family="binomial")
-   urban.coef.large[i] <- exp(coef(large.logit)[2])
-   }
-
-# let's look at the results for the last sample
-
-summary(large.logit)
-
-# calculate results
-
-mean(urban.coef.large)
-
-# now, let's sample from the population [nsamples] times
-
-nsamples <- 1000
-sampsize <- 1000
-
-urban.coef.medium <- vector()
-
-for(i in 1:nsamples)
-  {
-   sdf <- pop.df[sample(nrow(pop.df),size=sampsize,replace=T), ]
-   medium.logit <- glm(y~1+urban,data=sdf,family="binomial")
-   urban.coef.medium[i] <- exp(coef(large.logit)[2])
-   }
-
-# let's look at the results for the last sample
-
-summary(medium.logit)
-
-# calculate results
-
-mean(urban.coef.medium)
-
-# now, let's sample from the population [nsamples] times
-
-nsamples <- 1000
+nsamples <- 10000
 sampsize <- 50
 
 urban.coef.small <- vector()
@@ -90,6 +49,51 @@ summary(small.logit)
 # calculate results
 
 mean(urban.coef.small)
+
+# next, we use a sample that is 5x larger (N = 250)
+# we will call this a medium sample size
+
+nsamples <- 10000
+sampsize <- 250
+
+urban.coef.medium <- vector()
+
+for(i in 1:nsamples)
+  {
+   sdf <- pop.df[sample(nrow(pop.df),size=sampsize,replace=T), ]
+   medium.logit <- glm(y~1+urban,data=sdf,family="binomial")
+   urban.coef.medium[i] <- exp(coef(medium.logit)[2])
+   }
+
+# let's look at the results for the last sample
+
+summary(medium.logit)
+
+# calculate results
+
+mean(urban.coef.medium)
+
+# now we will use a large sample size of N = 1000
+
+nsamples <- 10000
+sampsize <- 1000
+
+urban.coef.large <- vector()
+
+for(i in 1:nsamples)
+  {
+   sdf <- pop.df[sample(nrow(pop.df),size=sampsize,replace=T), ]
+   large.logit <- glm(y~1+urban,data=sdf,family="binomial")
+   urban.coef.large[i] <- exp(coef(large.logit)[2])
+   }
+
+# let's look at the results for the last sample
+
+summary(large.logit)
+
+# calculate results
+
+mean(urban.coef.large)
 ```
 
 and here is the output:
@@ -121,11 +125,15 @@ Deviance Residuals:
 -1.3951  -1.1793   0.9743   0.9743   1.1755  
 
 Coefficients:
-            Estimate Std. Error z value            Pr(>|z|)    
-(Intercept) 0.004425   0.003379   1.309                0.19    
-urban       0.494164   0.004239 116.585 <0.0000000000000002 ***
+            Estimate Std. Error z value            Pr(>|z|)
+(Intercept) 0.004425   0.003379   1.309                0.19
+urban       0.494164   0.004239 116.585 <0.0000000000000002
+               
+(Intercept)    
+urban       ***
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 (Dispersion parameter for binomial family taken to be 1)
 
@@ -141,100 +149,10 @@ Number of Fisher Scoring iterations: 4
 1.639128 
 > 
 > # now, let's sample from the population [nsamples] times
+> # using a relatively small sample of size N = 50
+> # we will call this the small sample size
 > 
-> nsamples <- 1000
-> sampsize <- 3000
-> 
-> urban.coef.large <- vector()
-> 
-> for(i in 1:nsamples)
-+   {
-+    sdf <- pop.df[sample(nrow(pop.df),size=sampsize,replace=T), ]
-+    large.logit <- glm(y~1+urban,data=sdf,family="binomial")
-+    urban.coef.large[i] <- exp(coef(large.logit)[2])
-+    }
-> 
-> # let's look at the results for the last sample
-> 
-> summary(large.logit)
-
-Call:
-glm(formula = y ~ 1 + urban, family = "binomial", data = sdf)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--1.4133  -1.1661   0.9586   0.9586   1.1888  
-
-Coefficients:
-            Estimate Std. Error z value          Pr(>|z|)    
-(Intercept) -0.02672    0.06179  -0.432             0.665    
-urban        0.56606    0.07758   7.296 0.000000000000296 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 4075.2  on 2999  degrees of freedom
-Residual deviance: 4021.7  on 2998  degrees of freedom
-AIC: 4025.7
-
-Number of Fisher Scoring iterations: 4
-
-> 
-> # calculate results
-> 
-> mean(urban.coef.large)
-[1] 1.642454
-> 
-> # now, let's sample from the population [nsamples] times
-> 
-> nsamples <- 1000
-> sampsize <- 1000
-> 
-> urban.coef.medium <- vector()
-> 
-> for(i in 1:nsamples)
-+   {
-+    sdf <- pop.df[sample(nrow(pop.df),size=sampsize,replace=T), ]
-+    medium.logit <- glm(y~1+urban,data=sdf,family="binomial")
-+    urban.coef.medium[i] <- exp(coef(large.logit)[2])
-+    }
-> 
-> # let's look at the results for the last sample
-> 
-> summary(medium.logit)
-
-Call:
-glm(formula = y ~ 1 + urban, family = "binomial", data = sdf)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--1.4243  -1.1968   0.9492   0.9492   1.1582  
-
-Coefficients:
-            Estimate Std. Error z value Pr(>|z|)    
-(Intercept)  0.04546    0.10663   0.426 0.669842    
-urban        0.51840    0.13434   3.859 0.000114 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 1351.5  on 999  degrees of freedom
-Residual deviance: 1336.6  on 998  degrees of freedom
-AIC: 1340.6
-
-Number of Fisher Scoring iterations: 4
-
-> 
-> # calculate results
-> 
-> mean(urban.coef.medium)
-[1] 1.76132
-> 
-> # now, let's sample from the population [nsamples] times
-> 
-> nsamples <- 1000
+> nsamples <- 10000
 > sampsize <- 50
 > 
 > urban.coef.small <- vector()
@@ -254,19 +172,19 @@ Call:
 glm(formula = y ~ 1 + urban, family = "binomial", data = sdf)
 
 Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--1.5215  -1.1213   0.8687   0.8687   1.2346  
+   Min      1Q  Median      3Q     Max  
+-1.302  -1.302   1.058   1.058   1.354  
 
 Coefficients:
             Estimate Std. Error z value Pr(>|z|)
-(Intercept)  -0.1335     0.5175  -0.258    0.796
-urban         0.9137     0.6328   1.444    0.149
+(Intercept)  -0.4055     0.5270  -0.769    0.442
+urban         0.6931     0.6280   1.104    0.270
 
 (Dispersion parameter for binomial family taken to be 1)
 
-    Null deviance: 66.406  on 49  degrees of freedom
-Residual deviance: 64.302  on 48  degrees of freedom
-AIC: 68.302
+    Null deviance: 69.235  on 49  degrees of freedom
+Residual deviance: 67.994  on 48  degrees of freedom
+AIC: 71.994
 
 Number of Fisher Scoring iterations: 4
 
@@ -274,6 +192,101 @@ Number of Fisher Scoring iterations: 4
 > # calculate results
 > 
 > mean(urban.coef.small)
-[1] 2.108745
+[1] 2.068656
+> 
+> # next, we use a sample that is 5x larger (N = 250)
+> # we will call this a medium sample size
+> 
+> nsamples <- 10000
+> sampsize <- 250
+> 
+> urban.coef.medium <- vector()
+> 
+> for(i in 1:nsamples)
++   {
++    sdf <- pop.df[sample(nrow(pop.df),size=sampsize,replace=T), ]
++    medium.logit <- glm(y~1+urban,data=sdf,family="binomial")
++    urban.coef.medium[i] <- exp(coef(medium.logit)[2])
++    }
+> 
+> # let's look at the results for the last sample
+> 
+> summary(medium.logit)
+
+Call:
+glm(formula = y ~ 1 + urban, family = "binomial", data = sdf)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.6325  -1.1097   0.7826   0.7826   1.2466  
+
+Coefficients:
+            Estimate Std. Error z value  Pr(>|z|)    
+(Intercept)  -0.1613     0.2151  -0.750     0.453    
+urban         1.1876     0.2790   4.256 0.0000208 ***
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 326.71  on 249  degrees of freedom
+Residual deviance: 308.15  on 248  degrees of freedom
+AIC: 312.15
+
+Number of Fisher Scoring iterations: 4
+
+> 
+> # calculate results
+> 
+> mean(urban.coef.medium)
+[1] 1.705688
+> 
+> # now we will use a large sample size of N = 1000
+> 
+> nsamples <- 10000
+> sampsize <- 1000
+> 
+> urban.coef.large <- vector()
+> 
+> for(i in 1:nsamples)
++   {
++    sdf <- pop.df[sample(nrow(pop.df),size=sampsize,replace=T), ]
++    large.logit <- glm(y~1+urban,data=sdf,family="binomial")
++    urban.coef.large[i] <- exp(coef(large.logit)[2])
++    }
+> 
+> # let's look at the results for the last sample
+> 
+> summary(large.logit)
+
+Call:
+glm(formula = y ~ 1 + urban, family = "binomial", data = sdf)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.3795  -1.2034   0.9879   0.9879   1.1517  
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)   
+(Intercept)  0.06093    0.10081   0.604  0.54554   
+urban        0.40264    0.13086   3.077  0.00209 **
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1363.7  on 999  degrees of freedom
+Residual deviance: 1354.2  on 998  degrees of freedom
+AIC: 1358.2
+
+Number of Fisher Scoring iterations: 4
+
+> 
+> # calculate results
+> 
+> mean(urban.coef.large)
+[1] 1.655039
 > 
 ```
