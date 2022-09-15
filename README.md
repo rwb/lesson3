@@ -413,6 +413,7 @@ abline(v=seq(from=0,to=1,by=0.2),lty=3,lwd=0.5)
 
 * Notice that both curves reach their peak at the same location.
 * The log transformation is monotone (implying order preservation).
+* Please note that if you haven't worked with derivatives in awhile, I have a review at this [link](https://github.com/rwb/math-camp) (sections 17-21).
 * The next issue that arises is verifying that the log likelihood function is flat in the neighborhood of the maximum. We can check this by calculating the first derivative of the log-likelihood function:
 
 ```r
