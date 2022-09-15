@@ -548,3 +548,72 @@ abline(a=int.line,b=slope.line,lty=1,lwd=1,col="blue")
 <p align="left">
 <img src="likelihood-plot.png" width="800px">
 </p>
+
+* A key issue that arises in maximum likelihood estimation is studying the curvature of the log-likelihood function to obtain the Fisher information which can, in turn, be used to calculate the variances of the maximum likelihood estimate:
+
+```R
+# use finite difference approximation to calculate 
+# second derivative of log-likelihood function
+# this yields the observed Fisher information:
+
+j <- -(logpi1-2*logpid+logpi0)/((theta1-theta0)/2)^2
+j
+
+# second derivative using centered finite difference
+# approximation - negative sign = concave down
+
+(logpi1-2*logpid+logpi0)/((theta1-theta0)/2)^2
+
+# check the result using the normal approximation
+# to the binomial distribution
+
+se.thetad <- 1/j^(1/2)
+se.thetad
+
+sqrt(thetad*(1-thetad)/(n.treat+n.control))
+
+thetad-1.96*se.thetad
+thetad+1.96*se.thetad
+
+thetad-1.96*sqrt(thetad*(1-thetad)/(n.treat+n.control))
+thetad+1.96*sqrt(thetad*(1-thetad)/(n.treat+n.control))
+```
+
+* Here are the results:
+
+```Rout
+> # use finite difference approximation to calculate 
+> # second derivative of log-likelihood function
+> # this yields the observed Fisher information:
+> 
+> j <- -(logpi1-2*logpid+logpi0)/((theta1-theta0)/2)^2
+> j
+[1] 2097.966
+> 
+> # second derivative using centered finite difference
+> # approximation - negative sign = concave down
+> 
+> (logpi1-2*logpid+logpi0)/((theta1-theta0)/2)^2
+[1] -2097.966
+> 
+> # check the result using the normal approximation
+> # to the binomial distribution
+> 
+> se.thetad <- 1/j^(1/2)
+> se.thetad
+[1] 0.02183236
+> 
+> sqrt(thetad*(1-thetad)/(n.treat+n.control))
+[1] 0.02181428
+> 
+> thetad-1.96*se.thetad
+[1] 0.1393172
+> thetad+1.96*se.thetad
+[1] 0.2249
+> 
+> thetad-1.96*sqrt(thetad*(1-thetad)/(n.treat+n.control))
+[1] 0.1393526
+> thetad+1.96*sqrt(thetad*(1-thetad)/(n.treat+n.control))
+[1] 0.2248646
+> 
+```
